@@ -1,34 +1,43 @@
 import React, { Component } from 'react';
 import 'bulma/css/bulma.css';
-import foods from './foods.json';
 
 class Form extends Component {
 
   constructor(props) {
     super(props);
-    this.foodsArrForAdding = [...foods];
     this.state = {
       name: '',
       calories: '',
       imageSrc: '',
-      currentFoodsForAdding: this.foodsArrForAdding
+      quantity: 0,
     }
   }
 
   handleNameChange = (event) => {
-    this.setState({
-      name: event.target.value
-    })
+    if (event.target.value !== '') {
+      let word = event.target.value;
+      this.setState({
+        ...this.state,
+        name: word
+      })
+    } else {
+      this.setState({
+        ...this.state,
+        name: event.target.value
+      })
+    }
   }
 
   handleCaloriesChange = (event) => {
     this.setState({
+      ...this.state,
       calories: event.target.value
     })
   }
 
   handleImageSrcChange = (event) => {
     this.setState({
+      ...this.state,
       imageSrc: event.target.value
     })
   }
@@ -39,13 +48,17 @@ class Form extends Component {
       name: this.state.name,
       calories: this.state.calories,
       image: this.state.imageSrc,
-      quantity: 0
     }
-    this.foodsArrForAdding.push(newFood);
+    this.props.handleInformation(newFood);
     this.setState({
-      currentFoodsForAdding: this.foodsArrForAdding
+      name: '',
+      calories: '',
+      imageSrc: ''
     })
-    console.log(this.state.currentFoodsForAdding);
+  }
+
+  hideForm = (event) => {
+    this.props.hideForm();
   }
 
   render() {
@@ -63,9 +76,11 @@ class Form extends Component {
           <label>Image SRC:</label>
           <input type="text" value={this.state.imageSrc} onChange={this.handleImageSrcChange} />
 
-          <input type="submit" value="submit" />
+          <input type="submit" value="Submit" />
 
         </form>
+
+        <button onClick={this.hideForm}>Hide form</button>
 
       </div>
     );
