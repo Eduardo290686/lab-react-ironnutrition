@@ -1,18 +1,36 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import FoodBox from './FoodBox';
+import Form from './Form';
+import foods from './foods.json';
 
 class App extends Component {
+
+  constructor() {
+    super();
+    this.foodsArr = [...foods];
+    this.state = {
+      currentFoods: this.foodsArr
+    };
+  }
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <Form></Form>
+        {
+          this.state.currentFoods.map((food) => {
+            return (
+              <FoodBox
+                name={food.name}
+                calories={food.calories}
+                image={food.image}
+                key={food.name}
+              >
+              </FoodBox>
+            )
+          })
+        }
       </div>
     );
   }
