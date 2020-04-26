@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import './TodaysFoodBox.css';
 
 class TodaysFoodBox extends Component {
 
   render() {
     return (
-      <div>
+      <div className="today-container">
         <div className="box foodbox">
           <article className="media">
             <div className="media-left">
@@ -15,8 +16,9 @@ class TodaysFoodBox extends Component {
             <div className="media-content">
               <div className="content">
                 <p>
-                  <strong>{this.props.name}</strong> <br />
-                  <small>{this.props.calories} kcal</small>
+                  <strong>{this.props.name}</strong><br />
+                  <small>{this.props.calories} kcal</small><br />
+                  <small>{this.props.quantity}</small>
                 </p>
               </div>
             </div>

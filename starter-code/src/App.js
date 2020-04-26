@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import './App.css';
 import FoodBox from './FoodBox';
 import Form from './Form';
 import SearchBar from './SearchBar';
 import TodaysFoodBox from './TodaysFoodBox';
 import foods from './foods.json';
+import './App.css';
 
 class App extends Component {
 
@@ -26,7 +26,8 @@ class App extends Component {
       showForm: false,
       showBar: false,
       keyToAssign: this.foodsArr.length,
-      todaysFoods: []
+      todaysFoods: [],
+      totalCalories: 0
     };
   }
 
@@ -107,6 +108,45 @@ class App extends Component {
     })
   }
 
+  addTodayFood = (food) => {
+    let todaysFoodsList = this.state.todaysFoods;
+    let foodIncluded = false;
+    todaysFoodsList.map((eachFood) => {
+      if (eachFood.name === food.name) {
+        foodIncluded = true;
+        food.calories = parseInt(food.quantity, 10) * parseInt(food.calories, 10);
+        eachFood.calories = parseInt(eachFood.calories, 10) + parseInt(food.calories, 10)
+        eachFood.quantity = parseInt(eachFood.quantity, 10) + parseInt(food.quantity, 10);
+        this.setState({
+          todaysFoods: todaysFoodsList
+        })
+        return this.calculateTotalCalories();      
+      } else {
+        return 0;
+      }
+    })
+    if (foodIncluded === false) {
+      let addedFoods = this.state.todaysFoods;
+      food.calories = parseInt(food.quantity, 10) * parseInt(food.calories, 10);
+      addedFoods.push(food);
+      this.setState({
+        todaysFoods: addedFoods
+      })
+      this.calculateTotalCalories();
+    }
+  }
+
+  calculateTotalCalories = () => {
+    let sumCalories = 0;
+    this.state.todaysFoods.map((food) => {
+      let calories = food.calories;
+      return sumCalories += calories
+    })
+    this.setState({
+      totalCalories: sumCalories
+    })
+  }
+
   render() {
     return (
       <div className="main-container">
@@ -145,6 +185,7 @@ class App extends Component {
                     key={food.key}
                     id={food.key}
                     deleteFood={this.deleteFood}
+                    addTodayFood={this.addTodayFood}
                   >
                   </FoodBox>
                 )
@@ -155,10 +196,22 @@ class App extends Component {
             {
               this.state.todaysFoods.length !== 0
                 ?
-                <TodaysFoodBox></TodaysFoodBox>
+                this.state.todaysFoods.map((todaysFood) => {
+                  return (<TodaysFoodBox
+                    name={todaysFood.name}
+                    calories={todaysFood.calories}
+                    image={todaysFood.image}
+                    id={todaysFood.id}
+                    key={todaysFood.id}
+                    quantity={todaysFood.quantity}
+                  />)
+                })
                 :
                 null
             }
+            <div>
+              <p>Total calories:{this.state.totalCalories}</p>
+            </div>
           </div>
         </div>
       </div>

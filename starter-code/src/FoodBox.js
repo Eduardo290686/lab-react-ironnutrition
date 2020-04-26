@@ -4,9 +4,40 @@ import './FoodBox.css';
 
 class FoodBox extends Component {
 
-  deleteFood = (event)=> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      quantity: 0
+    }
+  }
+
+  deleteFood = (event) => {
     event.preventDefault();
     this.props.deleteFood(this.props.id);
+  }
+
+  handleQuantity = (event) => {
+    event.preventDefault();
+    let number = event.target.value;
+    this.setState({
+      quantity: number
+    })
+  }
+
+  handleTodayFood = (event) => {
+    event.preventDefault();
+    let foodQuantity = this.state.quantity;
+    let food = {
+      name: this.props.name,
+      calories: this.props.calories,
+      image: this.props.image,
+      id: this.props.id,
+      quantity: foodQuantity
+    }
+    this.props.addTodayFood(food);
+    this.setState({
+      quantity: 0
+    })
   }
 
   render() {
@@ -32,11 +63,12 @@ class FoodBox extends Component {
                 <input
                   className="input foodbox-input"
                   type="number"
-                //value="1"
+                  value={this.state.quantity}
+                  onChange={this.handleQuantity}
                 />
               </div>
               <div className="control">
-                <button className="button is-info blue-button">
+                <button className="button is-info blue-button" onClick={this.handleTodayFood}>
                   +
                 </button>
               </div>
