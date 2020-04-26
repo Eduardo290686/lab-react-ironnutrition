@@ -1,0 +1,29 @@
+.main-container {
+  padding: 3rem 6rem;
+}
+
+.main-title {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.inputs-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+button {
+  width: 7rem;
+}
+
+.button-input-container {
+  margin-bottom: 1rem;
+}
+
+.foods-info-container {
+  display: flex;
+  justify-content: space-between;
+}

@@ -10,6 +10,7 @@ class Form extends Component {
       calories: '',
       imageSrc: '',
       quantity: 0,
+      key: 0
     }
   }
 
@@ -53,7 +54,7 @@ class Form extends Component {
     this.setState({
       name: '',
       calories: '',
-      imageSrc: ''
+      imageSrc: '',
     })
   }
 
@@ -78,9 +79,9 @@ class Form extends Component {
 
           <input type="submit" value="Submit" />
 
-        </form>
+          <button onClick={this.hideForm}>Hide form</button>
 
-        <button onClick={this.hideForm}>Hide form</button>
+        </form>
 
       </div>
     );

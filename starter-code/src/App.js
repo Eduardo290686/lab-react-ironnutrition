@@ -3,6 +3,7 @@ import './App.css';
 import FoodBox from './FoodBox';
 import Form from './Form';
 import SearchBar from './SearchBar';
+import TodaysFoodBox from './TodaysFoodBox';
 import foods from './foods.json';
 
 class App extends Component {
@@ -10,11 +11,22 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.foodsArr = [...foods];
+    for (let i = 0; i < this.foodsArr.length; i++) {
+      this.foodsArr[i] = {
+        name: this.foodsArr[i].name,
+        calories: this.foodsArr[i].calories,
+        image: this.foodsArr[i].image,
+        quantity: this.foodsArr[i].quantity,
+        key: i
+      }
+    }
     this.state = {
       currentFoods: this.foodsArr,
       shownFoods: this.foodsArr,
       showForm: false,
-      showBar: false
+      showBar: false,
+      keyToAssign: this.foodsArr.length,
+      todaysFoods: []
     };
   }
 
@@ -50,11 +62,14 @@ class App extends Component {
 
   handleInformation = (newFood) => {
     newFood.name = newFood.name[0].toUpperCase() + newFood.name.slice(1);
-    this.foodsArr.push(newFood);
+    newFood.key = this.state.keyToAssign;
+    let newFoodList = this.state.currentFoods;
+    newFoodList.push(newFood);
     this.setState({
       ...this.state,
-      currentFoods: this.foodsArr,
-      shownFoods: this.foodsArr
+      currentFoods: newFoodList,
+      shownFoods: newFoodList,
+      keyToAssign: this.state.keyToAssign + 1
     })
   }
 
@@ -76,39 +91,76 @@ class App extends Component {
     }
   }
 
+  deleteFood = (foodKey) => {
+    let newCurrentFoods = [];
+    let newShownFoods = [];
+    newCurrentFoods = this.state.currentFoods.filter((food) => {
+      return food.key !== foodKey;
+    })
+    newShownFoods = this.state.shownFoods.filter((food) => {
+      return food.key !== foodKey;
+    })
+    this.setState({
+      ...this.state,
+      currentFoods: newCurrentFoods,
+      shownFoods: newShownFoods
+    })
+  }
+
   render() {
     return (
-      <div>
-        <h1>Nutrition</h1>
-        <button onClick={this.showBar}>Search food</button>
-        {
-          this.state.showBar
-            ?
-            <SearchBar handleSearch={this.handleSearch} hideBar={this.hideBar}></SearchBar>
-            :
-            null
-        }
-        <button onClick={this.showForm}>Add new food</button>
-        {
-          this.state.showForm
-            ?
-            <Form handleInformation={this.handleInformation} hideForm={this.hideForm} />
-            :
-            null
-        }
-        {
-          this.state.shownFoods.map((food) => {
-            return (
-              <FoodBox
-                name={food.name}
-                calories={food.calories}
-                image={food.image}
-                key={food.name}
-              >
-              </FoodBox>
-            )
-          })
-        }
+      <div className="main-container">
+        <h1 className="main-title">Welcome to IronNutrition</h1>
+        <div className="inputs-container">
+          <div className="button-input-container">
+            <button onClick={this.showBar}>Search food</button>
+            {
+              this.state.showBar
+                ?
+                <SearchBar handleSearch={this.handleSearch} hideBar={this.hideBar}></SearchBar>
+                :
+                null
+            }
+          </div>
+          <div className="button-input-container">
+            <button onClick={this.showForm}>Add new food</button>
+            {
+              this.state.showForm
+                ?
+                <Form handleInformation={this.handleInformation} hideForm={this.hideForm} />
+                :
+                null
+            }
+          </div>
+        </div>
+        <div className='foods-info-container'>
+          <div>
+            {
+              this.state.shownFoods.map((food) => {
+                return (
+                  <FoodBox
+                    name={food.name}
+                    calories={food.calories}
+                    image={food.image}
+                    key={food.key}
+                    id={food.key}
+                    deleteFood={this.deleteFood}
+                  >
+                  </FoodBox>
+                )
+              })
+            }
+          </div>
+          <div>
+            {
+              this.state.todaysFoods.length !== 0
+                ?
+                <TodaysFoodBox></TodaysFoodBox>
+                :
+                null
+            }
+          </div>
+        </div>
       </div>
     );
   }
